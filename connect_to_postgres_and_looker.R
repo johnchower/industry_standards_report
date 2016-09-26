@@ -4,6 +4,8 @@ drv <- dbDriver("PostgreSQL")
 
 pass <- readline(prompt = "Enter password: ")
 
+
+
 con <- 
   dbConnect(
     drv
@@ -14,6 +16,6 @@ con <-
     , password=pass
 )
 
-looker_setup(id = "mz8bPyHzY7MY5JNhSmcj",
-             secret = "vttZrNKZGcCyB8xyGq68qfVR",
+looker_setup(id = readLines("authenticate")[1],
+             secret = readLines("authenticate")[2],
              api_path = "https://api-looker.gloo.us/api/3.0")
