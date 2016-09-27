@@ -1,6 +1,6 @@
 # Produce summary data for report
 
-data.frame(n = c(1:4, 1, 1:7)
+summary_data <- data.frame(n = c(1:4, 1, 1:7)
            , p = c(rep(7, times = 4), 28, rep(1, times = 7))) %>%
   group_by(n, p) %>%
   mutate(min_date = get_time_period_minus_n(n, p)[1]
@@ -24,7 +24,6 @@ data.frame(n = c(1:4, 1, 1:7)
                , existing_user_count = existing_user_count0) %>%
       mutate(active_user_pct = active_user_count/existing_user_count)
   }) %>%
-  arrange(p, n) %>%
   mutate(periods_back = n
          , period_size = ifelse(p == 1
                                 , "day"
@@ -36,5 +35,7 @@ data.frame(n = c(1:4, 1, 1:7)
   ) %>%
   ungroup %>%
   select(-n, -p) %>%
-  melt(id.vars = c("periods_back", "period_size")) %>% .view
-         
+  melt(id.vars = c("periods_back", "period_size")) %>% 
+  arrange(period_size, variable, periods_back) %>%
+  mutate(period_name = paste(period_size, periods_back, sep = "_")) %>%
+  select(-periods_back, -period_size)
