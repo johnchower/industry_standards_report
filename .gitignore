@@ -1,0 +1,9 @@
+.Rhistory
+.RData
+.Ruser.data
+*.Rproj
+*.swp
+*.swo
+*.swa
+authenticate
+Session.vim
