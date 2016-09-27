@@ -1,5 +1,7 @@
 # Download all user platform actions since Jan 1, 2016
 
+if(use_lookr_to_get_data){
+
 user_platformaction_date <- 
   run_inline_query(
     model = "gloo"
@@ -16,7 +18,12 @@ user_platformaction_date <-
     , filters = list(c("user_platform_action_facts.id", "2233701"))    
   )
 
-user_platformaction_date %>% nrow
+} else {
 
-head(user_platformaction_date)
+  name_list <- fromJSON('./name_list.JSON')
 
+  base.df.list <- load_data() 
+  lapply(base.df.list
+         , FUN = function(df){assign_by_colnames_listversion(df, name_list)})
+    
+}

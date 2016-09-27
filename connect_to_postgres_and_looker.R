@@ -4,8 +4,6 @@ drv <- dbDriver("PostgreSQL")
 
 pass <- readline(prompt = "Enter password: ")
 
-
-
 con <- 
   dbConnect(
     drv
