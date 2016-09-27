@@ -1,2 +1,4 @@
 name, value, type
 use_lookr_to_get_data,F,logical
+run_date,20160923,date
+existing_user_cutoff_date,20160101,date
