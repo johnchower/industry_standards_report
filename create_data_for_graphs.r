@@ -5,6 +5,8 @@ summary_data <- data.frame(n = c(1:4, 1, 1:7)
   group_by(n, p) %>%
   mutate(min_date = get_time_period_minus_n(n, p)[1]
          , max_date = get_time_period_minus_n(n, p)[2]) %>%
+  ungroup %>%
+  group_by(n, p, min_date, max_date) %>%
   do({
     active_user_count0 <- 
       filter(user_platform_action_date 
@@ -24,18 +26,23 @@ summary_data <- data.frame(n = c(1:4, 1, 1:7)
                , existing_user_count = existing_user_count0) %>%
       mutate(active_user_pct = active_user_count/existing_user_count)
   }) %>%
-  mutate(periods_back = n
-         , period_size = ifelse(p == 1
-                                , "day"
-                                , ifelse(p == 7
-                                         , "week"
-                                         , ifelse(p == 28
-                                                  , "month"
-                                                  , NA)))
-  ) %>%
   ungroup %>%
-  select(-n, -p) %>%
-  melt(id.vars = c("periods_back", "period_size")) %>% 
-  arrange(period_size, variable, periods_back) %>%
-  mutate(period_name = paste(period_size, periods_back, sep = "_")) %>%
-  select(-periods_back, -period_size)
+  select(-n, -p) %>% 
+  melt(id.vars = c("min_date", "max_date")) %>%
+  mutate(variable = as.character(variable))
+
+# DAU for this week
+
+DAU_this_week <- summary_data %>%
+  filter(max_date - min_date + 1 == 1
+         , variable == "active_user_count") %>%
+  select(min_date, variable, value) %>%
+  dcast(min_date ~ variable, value.var = "value")
+
+# WAU for this month
+
+WAU_this_month <- summary_data %>%
+  filter(max_date - min_date + 1 == 7
+         , variable == "active_user_count") %>%
+  select(min_date, variable, value) %>%
+  dcast(min_date ~ variable, value.var = "value")
