@@ -34,13 +34,16 @@ rm(assign_by_colnames
    , base.df.list
    , name_list)
 
-user_platform_action_date %<>% {
-  did <- .$date_id
-  year <- substr(did, 1, 4)
-  month <- substr(did, 5, 6)
-  day <- substr(did, 7, 8)
-  date <- as.Date(paste(year, month, day, sep="-"))
-  cbind(., data.frame(date)) %>%
-    select(-date_id)
-}
+# Format the date column of user_platform_action_date
+did <- user_platform_action_date$date_id
+year <- substr(did, 1, 4)
+month <- substr(did, 5, 6)
+day <- substr(did, 7, 8)
+date <- as.Date(paste(year, month, day, sep="-"))
 
+user_platform_action_date <- 
+  cbind(user_platform_action_date
+        , data.frame(date)) %>%
+    select(-date_id)
+
+rm(did, year, month, day, date)
